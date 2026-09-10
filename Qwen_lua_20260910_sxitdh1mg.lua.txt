@@ -1,0 +1,124 @@
+-- VEIL UI DEMO
+-- shows every UI component so we can iterate on design
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/abc932527-wq/roblox-script/main/ui-lib.lua"))()
+
+local UI = Library.new("[V] VEIL HUB", "Demo Preview")
+
+local tab1 = UI:AddTab("Visuals", "VS")
+local tab2 = UI:AddTab("Combat", "CB")
+local tab3 = UI:AddTab("Movement", "MV")
+local tab4 = UI:AddTab("Teleports", "TP")
+local tab5 = UI:AddTab("Misc", "MS")
+
+-- TAB 1: Visuals (showcases toggles, sliders, buttons, labels)
+UI:AddSection(tab1, "Player ESP")
+UI:AddToggle(tab1, "Enable ESP", "ESP", true)
+UI:AddToggle(tab1, "ESP Boxes", "ESPBoxes", true)
+UI:AddToggle(tab1, "ESP Names", "ESPNames", true)
+UI:AddToggle(tab1, "ESP Distance", "ESPDist", true)
+UI:AddToggle(tab1, "ESP Tracers", "ESPTracers", false)
+UI:AddToggle(tab1, "ESP Health Bar", "ESPHealth", false)
+UI:AddToggle(tab1, "Chams", "Chams", false)
+
+UI:AddSection(tab1, "World")
+UI:AddToggle(tab1, "Fullbright", "Fullbright", false)
+UI:AddToggle(tab1, "No Fog", "NoFog", false)
+UI:AddToggle(tab1, "X-Ray Walls", "XRay", false)
+UI:AddSlider(tab1, "Net Transparency", "NetTrans", 0, 100, 0)
+UI:AddSlider(tab1, "Render Distance", "RenderDist", 100, 5000, 1000)
+
+UI:AddSection(tab1, "Performance")
+UI:AddToggle(tab1, "Low Graphics", "LowGfx", false)
+UI:AddToggle(tab1, "FPS Booster", "FpsBoost", false)
+UI:AddButton(tab1, "Apply Settings", function()
+    UI:Notify("Settings applied")
+end)
+
+-- TAB 2: Combat
+UI:AddSection(tab2, "Aim")
+UI:AddToggle(tab2, "Aimbot", "Aimbot", false)
+UI:AddSlider(tab2, "Smoothness", "AimSmooth", 1, 100, 25)
+UI:AddSlider(tab2, "FOV Radius", "AimFOV", 50, 500, 150)
+UI:AddToggle(tab2, "Silent Aim", "SilentAim", false)
+UI:AddToggle(tab2, "Triggerbot", "Triggerbot", false)
+
+UI:AddSection(tab2, "Exploits")
+UI:AddToggle(tab2, "Kill Aura", "KillAura", false)
+UI:AddSlider(tab2, "Aura Range", "AuraRange", 10, 200, 50)
+UI:AddToggle(tab2, "Hitbox Expander", "Hitbox", false)
+UI:AddSlider(tab2, "Hitbox Size", "HitboxSize", 5, 50, 15)
+UI:AddToggle(tab2, "Auto Dodge", "AutoDodge", false)
+
+-- TAB 3: Movement
+UI:AddSection(tab3, "Speed")
+UI:AddToggle(tab3, "Speed Hack", "Speed", false)
+UI:AddSlider(tab3, "Walk Speed", "SpeedVal", 16, 200, 16)
+
+UI:AddSection(tab3, "Jump")
+UI:AddToggle(tab3, "Jump Power", "Jump", false)
+UI:AddSlider(tab3, "Jump Value", "JumpVal", 50, 300, 50)
+UI:AddToggle(tab3, "Infinite Jump", "InfJump", false)
+
+UI:AddSection(tab3, "Flight")
+UI:AddToggle(tab3, "Fly", "Fly", false)
+UI:AddSlider(tab3, "Fly Speed", "FlySpeed", 10, 200, 50)
+
+UI:AddSection(tab3, "Physics")
+UI:AddToggle(tab3, "NoClip", "NoClip", false)
+UI:AddToggle(tab3, "God Mode", "GodMode", false)
+UI:AddToggle(tab3, "Custom Gravity", "Grav", false)
+UI:AddSlider(tab3, "Gravity", "GravVal", 50, 196, 196)
+
+-- TAB 4: Teleports
+UI:AddSection(tab4, "Quick TP")
+UI:AddButton(tab4, "TP to Spawn", function()
+    UI:Notify("Teleported to spawn")
+end)
+UI:AddButton(tab4, "TP to Nearest Player", function()
+    UI:Notify("Searching for nearest player...")
+end)
+UI:AddButton(tab4, "TP to Map Center", function()
+    UI:Notify("Teleported to center")
+end)
+UI:AddButton(tab4, "TP to Highest Point", function()
+    UI:Notify("Scanning terrain...")
+end)
+
+UI:AddSection(tab4, "Auto")
+UI:AddToggle(tab4, "Auto TP to Objective", "AutoTPObj", false)
+UI:AddToggle(tab4, "Auto TP to Loot", "AutoTPLoot", false)
+
+-- TAB 5: Misc
+UI:AddSection(tab5, "Utility")
+UI:AddToggle(tab5, "Anti AFK", "AntiAFK", true)
+UI:AddButton(tab5, "Rejoin Server", function()
+    UI:Notify("Rejoining...")
+end)
+UI:AddButton(tab5, "Copy Place ID", function()
+    UI:Notify("PlaceId copied to clipboard")
+end)
+UI:AddButton(tab5, "Copy Job ID", function()
+    UI:Notify("JobId copied to clipboard")
+end)
+
+UI:AddSection(tab5, "Info")
+UI:AddLabel(tab5, "Veil Hub v3.0.0")
+UI:AddLabel(tab5, "PlaceId: " .. tostring(game.PlaceId))
+UI:AddLabel(tab5, "JobId: " .. tostring(game.JobId))
+
+UI:AddSection(tab5, "Danger Zone")
+UI:AddButton(tab5, "Dump All Remotes", function()
+    UI:Notify("Remotes dumped to console")
+end)
+UI:AddButton(tab5, "Destroy Hub", function()
+    UI:Destroy()
+end)
+
+-- keybind: RightShift to toggle, End to panic
+UI:AddKeybind(Enum.KeyCode.RightShift)
+
+-- fire a few notifications to show them
+task.delay(0.5, function() UI:Notify("Hub loaded successfully", 3) end)
+task.delay(1.5, function() UI:Notify("Try toggling things", 3) end)
+task.delay(2.5, function() UI:Notify("Drag the topbar to move", 3) end)
