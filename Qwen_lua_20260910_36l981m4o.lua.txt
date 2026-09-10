@@ -1,0 +1,76 @@
+-- VEIL HUB MAIN v3
+-- router. maps PlaceId (or game name) to a script in /games.
+-- to add a game: upload games/<name>.lua, then add one line below.
+
+local CoreGui = game:GetService("CoreGui")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+local RAW = "https://raw.githubusercontent.com/abc932527-wq/roblox-script/main/games/"
+
+-- by PlaceId (most reliable)
+local GameScripts = {
+    -- [0000000000] = RAW .. "example.lua",
+}
+
+-- by game name (fallback when you don't know the PlaceId)
+local NameScripts = {
+    -- ["Example Game"] = RAW .. "example.lua",
+}
+
+local placeId = game.PlaceId
+
+local gameName = ""
+pcall(function()
+    gameName = MarketplaceService:GetProductInfo(placeId).Name
+end)
+
+local url = GameScripts[placeId] or NameScripts[gameName]
+
+if not url then
+    local sg = Instance.new("ScreenGui")
+    sg.Name = "VeilRouterMsg"
+    sg.ResetOnSpawn = false
+    sg.Parent = CoreGui
+
+    local f = Instance.new("Frame")
+    f.Size = UDim2.new(0, 420, 0, 110)
+    f.Position = UDim2.new(0.5, -210, 0.5, -55)
+    f.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    f.BorderSizePixel = 0
+    f.Parent = sg
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 10)
+
+    local t = Instance.new("TextLabel")
+    t.Size = UDim2.new(1, -24, 1, -24)
+    t.Position = UDim2.new(0, 12, 0, 12)
+    t.BackgroundTransparency = 1
+    t.Text = "[V] VEIL: no script for this game yet.\nPlaceId: " .. tostring(placeId) .. "\nName: " .. gameName
+    t.Font = Enum.Font.GothamBold
+    t.TextColor3 = Color3.fromRGB(255, 255, 255)
+    t.TextSize = 14
+    t.TextWrapped = true
+    t.TextXAlignment = Enum.TextXAlignment.Left
+    t.TextYAlignment = Enum.TextYAlignment.Top
+    t.Parent = f
+
+    game:GetService("Debris"):AddItem(sg, 8)
+    warn("[VEIL] No script configured. PlaceId:", placeId, "Name:", gameName)
+    return
+end
+
+local ok, source = pcall(function()
+    return game:HttpGet(url)
+end)
+
+if not ok or type(source) ~= "string" or #source == 0 then
+    warn("[VEIL] Failed to fetch game script:", url)
+    return
+end
+
+local fn, compileErr = loadstring(source)
+if not fn then
+    warn("[VEIL] Game script compile error:", compileErr)
+    return
+end
+
+fn()
