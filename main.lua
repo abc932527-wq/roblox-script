@@ -9,7 +9,7 @@ local RAW = "https://raw.githubusercontent.com/abc932527-wq/roblox-script/main/g
 
 -- by PlaceId (most reliable)
 local GameScripts = {
-    -- [0000000000] = RAW .. "example.lua",
+       [113290951185459] = "https://raw.githubusercontent.com/abc932527-wq/roblox-script/main/games/anime-dice.lua",
 }
 
 -- by game name (fallback when you don't know the PlaceId)
