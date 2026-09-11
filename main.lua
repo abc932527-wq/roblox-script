@@ -1,42 +1,24 @@
--- VEIL HUB MAIN v3.1 (DEBUG)
+-- VEIL HUB MAIN v3
 local CoreGui = game:GetService("CoreGui")
 local MarketplaceService = game:GetService("MarketplaceService")
 
 local RAW = "https://raw.githubusercontent.com/abc932527-wq/roblox-script/main/games/"
 
--- by PlaceId
 local GameScripts = {
     [113290951185459] = RAW .. "anime-dice.lua",
 }
 
--- by game name
 local NameScripts = {
     ["Anime Dice"] = RAW .. "anime-dice.lua",
 }
 
 local placeId = game.PlaceId
-
 local gameName = ""
-pcall(function()
-    gameName = MarketplaceService:GetProductInfo(placeId).Name
-end)
-
--- Debug notification
-game.StarterGui:SetCore("SendNotification", {
-    Title = "[V] VEIL",
-    Text = "PlaceId: " .. tostring(placeId) .. "\nName: " .. gameName,
-    Duration = 5
-})
+pcall(function() gameName = MarketplaceService:GetProductInfo(placeId).Name end)
 
 local url = GameScripts[placeId] or NameScripts[gameName]
 
 if not url then
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "[V] VEIL ERROR",
-        Text = "No script configured for this game",
-        Duration = 8
-    })
-    
     local sg = Instance.new("ScreenGui")
     sg.Name = "VeilRouterMsg"
     sg.ResetOnSpawn = false
@@ -63,46 +45,14 @@ if not url then
     t.TextYAlignment = Enum.TextYAlignment.Top
     t.Parent = f
 
-    game:GetService("Debris"):AddItem(sg, 15)
-    warn("[VEIL] No script configured. PlaceId:", placeId, "Name:", gameName)
+    game:GetService("Debris"):AddItem(sg, 8)
     return
 end
 
-game.StarterGui:SetCore("SendNotification", {
-    Title = "[V] VEIL",
-    Text = "Fetching: " .. url,
-    Duration = 3
-})
-
-local ok, source = pcall(function()
-    return game:HttpGet(url)
-end)
-
-if not ok or type(source) ~= "string" or #source == 0 then
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "[V] VEIL ERROR",
-        Text = "Failed to fetch script\nCheck if file exists in repo",
-        Duration = 8
-    })
-    warn("[VEIL] Failed to fetch game script:", url, "Error:", ok)
-    return
-end
-
-game.StarterGui:SetCore("SendNotification", {
-    Title = "[V] VEIL",
-    Text = "Executing script...",
-    Duration = 2
-})
+local ok, source = pcall(function() return game:HttpGet(url) end)
+if not ok or type(source) ~= "string" or #source == 0 then return end
 
 local fn, compileErr = loadstring(source)
-if not fn then
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "[V] VEIL ERROR",
-        Text = "Script compile error\nCheck console for details",
-        Duration = 8
-    })
-    warn("[VEIL] Game script compile error:", compileErr)
-    return
-end
+if not fn then warn("[VEIL] Compile error:", compileErr) return end
 
 fn()
